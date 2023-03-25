@@ -54,4 +54,6 @@ helm dependency update .
 
 helm package .
 
+ls /github/home/.config/helm/
+
 helm cm-push ${CHART_FOLDER}-* ${CHARTMUSEUM_URL} -u ${CHARTMUSEUM_USER} -p ${CHARTMUSEUM_PASSWORD} ${FORCE}
