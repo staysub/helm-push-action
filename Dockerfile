@@ -1,11 +1,11 @@
 FROM plugins/base:linux-amd64
 
-LABEL maintainer="Serebrennikov Stanislav <goodsmileduck@gmail.com>" \
+LABEL maintainer="Allan Ayamah <allan.ayamah@gmail.com>" \
   org.label-schema.name="helm chart push" \
-  org.label-schema.vendor="Serebrennikov Stanislav" \
+  org.label-schema.vendor="Allan Ayamah" \
   org.label-schema.schema-version="1.0"
 
-ENV HELM_VERSION v3.7.2
+ENV HELM_VERSION v3.11.2
 ENV HELM_PLUGIN_PUSH_VERSION v0.10.1
 
 ENV XDG_CONFIG_DIR=/opt
