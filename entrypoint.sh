@@ -44,8 +44,15 @@ helm version -c
 
 echo ${CHARTMUSEUM_PASSWORD} | helm registry login -u ${CHARTMUSEUM_USER} --password-stdin ${CHARTMUSEUM_URL}
 
+PROTOCOL=""
+if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] || [ "$OCI_ENABLED_REGISTRY" == "TRUE" ]; then
+  PROTOCOL="oci://"
+fi
+
+CHARTMUSEUM_COMPLETE_URL="${PROTOCOL}${CHARTMUSEUM_URL}"
+
 if [[ $CHARTMUSEUM_REPO_NAME ]]; then
-  helm repo add ${CHARTMUSEUM_REPO_NAME} ${CHARTMUSEUM_URL}
+  helm repo add ${CHARTMUSEUM_REPO_NAME} ${CHARTMUSEUM_COMPLETE_URL}
 fi
 
 helm inspect chart .
@@ -54,7 +61,7 @@ helm dependency update .
 
 helm package .
 
-#get file path from successfully output message from helm package command
+#gets file path from successfully output message from helm package command
 #this is hack but it seem the chartmuseum plugin "cm-push" is not compatible with the latest version of helm
 HELM_MESSAGE_OUTPUT=$(!!)
 FILE_PATH="${HELM_MESSAGE_OUTPUT##*: }"
@@ -64,9 +71,4 @@ if [ ! -f $FILE_PATH ]; then
   exit 1
 fi
 
-PROTOCOL=""
-if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] || [ "$OCI_ENABLED_REGISTRY" == "TRUE" ]; then
-  PROTOCOL="oci://"
-fi
-
-helm push $FILE_PATH "${PROTOCOL}${CHARTMUSEUM_URL}"
+helm push ${FILE_PATH} ${CHARTMUSEUM_COMPLETE_URL}
