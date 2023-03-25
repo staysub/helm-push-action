@@ -6,7 +6,7 @@ LABEL maintainer="Allan Ayamah <allan.ayamah@gmail.com>" \
   org.label-schema.schema-version="1.0"
 
 ENV HELM_VERSION v3.11.2
-ENV HELM_PLUGIN_PUSH_VERSION v0.10.1
+ENV HELM_PLUGIN_PUSH_VERSION v0.10.3
 
 ENV XDG_CONFIG_DIR=/opt
 ENV XDG_DATA_HOME=/opt
