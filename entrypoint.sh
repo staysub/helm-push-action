@@ -52,8 +52,8 @@ helm inspect chart .
 
 helm dependency update .
 
-helm package .
+helm package . > package_output
 
-ls /github/home/.config/helm/
+echo "HERE IS OUTput: ${package_output}"
 
 helm cm-push ${CHART_FOLDER}-* ${CHARTMUSEUM_URL} -u ${CHARTMUSEUM_USER} -p ${CHARTMUSEUM_PASSWORD} ${FORCE}
