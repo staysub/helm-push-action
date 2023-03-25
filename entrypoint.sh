@@ -54,6 +54,6 @@ helm dependency update .
 
 helm package . > package_output
 
-echo "HERE IS OUTput: ${package_output}"
+echo "HERE IS OUTput: " $(!!)
 
 helm cm-push ${CHART_FOLDER}-* ${CHARTMUSEUM_URL} -u ${CHARTMUSEUM_USER} -p ${CHARTMUSEUM_PASSWORD} ${FORCE}
