@@ -39,21 +39,34 @@ cd ${SOURCE_DIR}/${CHART_FOLDER}
 
 helm version -c
 
-#it's better to always login before because some charts might depend on other charts in the same museum
+#it's better to always login before because some charts might depend on others same museum
+# and the need to be downloaded during packaging
+
 echo ${CHARTMUSEUM_PASSWORD} | helm registry login -u ${CHARTMUSEUM_USER} --password-stdin ${CHARTMUSEUM_URL}
 
-if [[ ! $CHARTMUSEUM_REPO_NAME ]]; then
-  CHARTMUSEUM_REPO_NAME=${CHARTMUSEUM_URL}
-  echo "use $CHARTMUSEUM_URL as CHARTMUSEUM_REPO_NAME"
+if [[ $CHARTMUSEUM_REPO_NAME ]]; then
+  helm repo add ${CHARTMUSEUM_REPO_NAME} ${CHARTMUSEUM_URL}
 fi
 
-#helm repo add ${CHARTMUSEUM_REPO_NAME} ${CHARTMUSEUM_URL}
 helm inspect chart .
 
 helm dependency update .
 
-helm package . > package_output
+helm package .
 
-echo "HERE IS OUTput: " $(!!)
+#get file path from successfully output message from helm package command
+#this is hack but it seem the chartmuseum plugin "cm-push" is not compatible with the latest version of helm
+HELM_MESSAGE_OUTPUT=$(!!)
+FILE_PATH="${HELM_MESSAGE_OUTPUT##*: }"
 
-helm cm-push ${CHART_FOLDER}-* ${CHARTMUSEUM_URL} -u ${CHARTMUSEUM_USER} -p ${CHARTMUSEUM_PASSWORD} ${FORCE}
+if [ ! -f $FILE_PATH ]; then
+  echo "could not package: $SRC_CONFIG_CHANGE_FILE"
+  exit 1
+fi
+
+PROTOCOL=""
+if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] || [ "$OCI_ENABLED_REGISTRY" == "TRUE" ]; then
+  PROTOCOL="oci://"
+fi
+
+helm push $FILE_PATH "${PROTOCOL}${CHARTMUSEUM_URL}"
