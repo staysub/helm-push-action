@@ -3,10 +3,6 @@
 set -e
 set -x
 
-
-
-curl -s http://chartmuseum:8080
-
 if [ -z "$CHART_DIR" ]; then
   echo "CHART_DIR is not set. Quitting."
   exit 1
@@ -40,16 +36,18 @@ if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] |
 fi
 
 
-echo ${REGISTRY_PASSWORD} | helm registry login --username ${REGISTRY_USER} --password-stdin ${REGISTRY_URL}
+#echo ${REGISTRY_PASSWORD} | helm registry login --username ${REGISTRY_USER} --password-stdin ${REGISTRY_URL}
+
+
+
+#if [[ $CAN_REPO_ADD == 1 && $REGISTRY_NAME ]]; then
+#fi
+
+echo ${REGISTRY_PASSWORD} | helm repo add ${REGISTRY_NAME} ${REGISTRY_URL} --username ${REGISTRY_USER} --password-stdin ${HELM_REPO_ADD_FLAGS}
 
 cd ${SOURCE_DIR}/${CHART_DIR}
 
 helm version -c
-
-if [[ $CAN_REPO_ADD == 1 && $REGISTRY_NAME ]]; then
-  echo ${REGISTRY_PASSWORD} | helm repo add ${REGISTRY_NAME} ${REGISTRY_URL} --username ${REGISTRY_USER} --password-stdin ${HELM_REPO_ADD_FLAGS}
-fi
-
 
 helm inspect chart . ${HELM_INSPECT_FLAGS}
 
