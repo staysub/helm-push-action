@@ -52,17 +52,14 @@ helm inspect chart . ${HELM_INSPECT_FLAGS}
 
 helm dependency update . ${HELM_DEPENDENCY_UPDATE_FLAGS}
 
-helm package . ${HELM_PACKAGE_FLAGS}
+TMP_PACKAGE_DIR="/tmp/charts/${CHART_DIR}"
+mkdir -p ${TMP_PACKAGE_DIR}
 
-#gets file path from successfully output message from helm package command
-#this is hack but it seem the REGISTRY plugin "cm-push" is not compatible with the latest version of helm
-HELM_MESSAGE_OUTPUT=$(!!)
-FILE_PATH="${HELM_MESSAGE_OUTPUT##*: }"
-
-if [ ! -f $FILE_PATH ]; then
-  echo "could not package: $SRC_CONFIG_CHANGE_FILE"
-  exit 1
-fi
+helm package . -d ${TMP_PACKAGE_DIR} ${HELM_PACKAGE_FLAGS}
 
 COMPLETE_REGISTRY_URL="${PROTOCOL}${REGISTRY_URL}"
-helm push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS}
+
+for FILE_PATH in `ls -1 ${TMP_PACKAGE_DIR}/*.tgz`;
+do
+   helm push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS};
+done
