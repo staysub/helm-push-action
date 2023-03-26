@@ -1,4 +1,4 @@
-name: 'Helm3 pipeline'
+name: 'Helm3 with authentication and multiple charts pipeline'
 on:
   push:
     branches:
@@ -34,12 +34,10 @@ jobs:
       - name: 'Test helm v3 version'
         run: 'docker run --rm -i --entrypoint=helm helm version -c'
 
-      - name: 'Test helm v3 push'
+      - name: 'Test helm v3 push multiple'
         uses: ./
         env:
-          SOURCE_DIR: '.github/'
-          CHART_DIR: 'chart'
-          REGISTRY_NAME: "my-chartmuseum"
-          REGISTRY_URL: 'https://chartmuseum:8080'
+          CHART_DIR_PATH_LIST: './.github/chart\n./.github/deep/chart2'
+          REGISTRY_URL: 'http://chartmuseum:8080'
           REGISTRY_USER: 'admin'
           REGISTRY_PASSWORD: 'test'

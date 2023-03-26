@@ -3,8 +3,8 @@
 set -e
 set -x
 
-if [ -z "$CHART_DIR" ]; then
-  echo "CHART_DIR is not set. Quitting."
+if [ -z "$CHART_DIR_PATH_LIST" ]; then
+  echo "CHART_DIR_PATH_LIST is not set. Quitting."
   exit 1
 fi
 
@@ -13,18 +13,13 @@ if [ -z "$REGISTRY_URL" ]; then
   exit 1
 fi
 
-if [ -z "$REGISTRY_USER" ]; then
-  echo "REGISTRY_USER is not set. Quitting."
-  exit 1
-fi
-
-if [ -z "$REGISTRY_PASSWORD" ]; then
-  echo "REGISTRY_PASSWORD is not set. Quitting."
-  exit 1
-fi
-
-if [ -z "$SOURCE_DIR" ]; then
-  SOURCE_DIR="."
+if [[ -z "$REGISTRY_USER" ]]; then
+  echo "no authentication"
+else
+   if [ -z "$REGISTRY_PASSWORD" ]; then
+      echo "REGISTRY_PASSWORD required if REGISTRY_USER is set. Quitting."
+      exit 1
+    fi
 fi
 
 PROTOCOL=""
@@ -33,34 +28,56 @@ if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] |
   PROTOCOL="oci://"
   #helm dont support add for oci registries
   CAN_REPO_ADD=0
+  OCI_ENABLED_REGISTRY="True"
 fi
-
-
-#echo ${REGISTRY_PASSWORD} | helm registry login --username ${REGISTRY_USER} --password-stdin ${REGISTRY_URL}
-
-
-
-#if [[ $CAN_REPO_ADD == 1 && $REGISTRY_NAME ]]; then
-#fi
-
-echo ${REGISTRY_PASSWORD} | helm repo add ${REGISTRY_NAME} ${REGISTRY_URL} --username ${REGISTRY_USER} --password-stdin ${HELM_REPO_ADD_FLAGS}
-
-cd ${SOURCE_DIR}/${CHART_DIR}
 
 helm version -c
 
-helm inspect chart . ${HELM_INSPECT_FLAGS}
+if [[ $REGISTRY_USER ]]; then
+  if [[ $CAN_REPO_ADD == 1 ]]; then
+    if [ -z "$REGISTRY_REPO_NAME" ]; then
+      REGISTRY_REPO_NAME="SS_SOME_REPO_NAME"
+    fi
+    echo ${REGISTRY_PASSWORD} | helm repo add ${REGISTRY_REPO_NAME} ${REGISTRY_URL} --username ${REGISTRY_USER} --password-stdin ${HELM_REPO_ADD_FLAGS}
+  else
+    echo ${REGISTRY_PASSWORD} | helm registry login --username ${REGISTRY_USER} --password-stdin ${REGISTRY_URL}
+  fi
+fi
 
-helm dependency update . ${HELM_DEPENDENCY_UPDATE_FLAGS}
+SOURCE_DIR=""
 
-TMP_PACKAGE_DIR="/tmp/charts/${CHART_DIR}"
-mkdir -p ${TMP_PACKAGE_DIR}
+#Package all charts
+TMP_DIR_PREFIX="/tmp/charts/"
+while IFS= read -r I_CHART_DIR_PATH_LIST; do
+  I_CHART_DIR_PATH="${SOURCE_DIR}/${I_CHART_DIR}"
 
-helm package . -d ${TMP_PACKAGE_DIR} ${HELM_PACKAGE_FLAGS}
+  helm inspect chart ${I_CHART_DIR_PATH} ${HELM_INSPECT_FLAGS}
+  helm dependency update ${I_CHART_DIR_PATH} ${HELM_DEPENDENCY_UPDATE_FLAGS}
+
+  TMP_PACKAGE_DIR="${TMP_DIR_PREFIX}/${I_CHART_DIR}"
+  mkdir -p ${TMP_PACKAGE_DIR}
+
+  helm package . -d ${TMP_PACKAGE_DIR} ${HELM_PACKAGE_FLAGS}
+done <<<"$CHART_DIR_PATH_LIST"
 
 COMPLETE_REGISTRY_URL="${PROTOCOL}${REGISTRY_URL}"
 
-for FILE_PATH in `ls -1 ${TMP_PACKAGE_DIR}/*.tgz`;
-do
-   helm push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS};
-done
+HELM_SUPPORTS_PROTOCOL=1
+
+if [[ $COMPLETE_REGISTRY_URL == http:* ]]; then
+  HELM_SUPPORTS_PROTOCOL=0
+fi
+#push all generated charts
+while IFS= read -r I_CHART_DIR_PATH_LIST; do
+  I_CHART_DIR_PATH="${SOURCE_DIR}/${I_CHART_DIR}"
+  TMP_PACKAGE_DIR="${TMP_DIR_PREFIX}/${I_CHART_DIR}"
+
+  for FILE_PATH in $(ls -1 ${TMP_PACKAGE_DIR}/*.tgz); do
+    if [[ "${OCI_ENABLED_REGISTRY}" == "True" ]]; then
+      helm push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS}
+    else
+      helm cm-push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS}
+    fi
+  done
+done <<<"$CHART_DIR_PATH_LIST"
+echo "done"
