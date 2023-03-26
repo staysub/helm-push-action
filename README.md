@@ -4,7 +4,7 @@ This action packages helm chart and publish it to your chart registry (OCI regis
 
 1. OCI registry : Confirmed
 2. Chartmusem : Confirmed
-3. Should work for pretty much any other registry (if it does not, please open an issue)
+3. Should work for pretty much any other registry (if it doesn't, please open an issue)
 
 ## Usage
 
