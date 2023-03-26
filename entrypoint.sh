@@ -1,11 +1,7 @@
 ##!/usr/bin/env bash
 
-#set -e
-#set -x
-
-
-CHART_DIR_PATH_LIST=".github/chart"
-REGISTRY_URL="http://chartmuseum:8080"
+set -e
+set -x
 
 if [ -z "$CHART_DIR_PATH_LIST" ]; then
   echo "CHART_DIR_PATH_LIST is not set. Quitting."
