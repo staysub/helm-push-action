@@ -56,18 +56,18 @@ especially `REGISTRY_USER` and `REGISTRY_PASSWORD`, should
 be [set as encrypted secrets](https://help.github.com/en/articles/virtual-environments-for-github-actions#creating-and-using-secrets-encrypted-variables) —
 otherwise, they'll be public to anyone browsing your repository.
 
-| Key                            | Value                                                                                                                                                           | Suggested Type | Required |
-|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------|
-| `CHART_DIR_PATH_LIST`          | One or more directories paths where Chart.yaml can be found. Paths are seperated by the character `:`                                                           | `env`          | **Yes**  |
-| `REGISTRY_URL`                 | Complete registry url. Avoid adding `oci://` protocol/prefix                                                                                                    | `env`          | **Yes**  |
-| `REGISTRY_REPO_NAME`           | Repo name. If emtpy a generic string will be used                                                                                                               | `env`          | No       |
-| `REGISTRY_USER`                | Username for registry                                                                                                                                           | `secret`       | No       |
-| `REGISTRY_PASSWORD`            | Password for registry                                                                                                                                           | `secret`       | No       |
-| `OCI_ENABLED_REGISTRY`         | Set to `True` if your registry is OCI based like (GCP artifact registry). Defaults is `False` if not provided.                                                  | `env`          | No       |
-| `HELM_INSPECT_FLAGS`           | Combination of helm inspect supported flags. [here](https://helm.sh/docs/helm/helm_inspect/)        | `env`          | No       |
-| `HELM_DEPENDENCY_UPDATE_FLAGS` | Combination of helm dependency update supported flags. [here](https://helm.sh/docs/helm/dependency_update/) | `env`          | No       |
-| `HELM_PACKAGE_FLAGS`           | Combination of helm package supported flags. [here](https://helm.sh/docs/helm/helm_package/)       | `env`          | No       |
-| `HELM_PUSH_FLAGS`              | Combination of helm push supported flags. [here](https://helm.sh/docs/helm/helm_push/)          | `env`          | No       |
+| Key                            | Value                                                                                                                                                        | Suggested Type | Required |
+|--------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------|
+| `CHART_DIR_PATH_LIST`          | One or more directories paths where Chart.yaml can be found. Paths are seperated by the character `:`                                                        | `env`          | **Yes**  |
+| `REGISTRY_URL`                 | Complete registry url. Avoid adding `oci://` protocol/prefix                                                                                                 | `env`          | **Yes**  |
+| `REGISTRY_REPO_NAME`           | Repo name. If emtpy a generic string will be used                                                                                                            | `env`          | No       |
+| `REGISTRY_USER`                | Username for registry                                                                                                                                        | `secret`       | No       |
+| `REGISTRY_PASSWORD`            | Password for registry                                                                                                                                        | `secret`       | No       |
+| `OCI_ENABLED_REGISTRY`         | Set to `True` if your registry is OCI based like (GCP artifact registry). Defaults is `False` if not provided.                                               | `env`          | No       |
+| `HELM_INSPECT_FLAGS`           | Combination of helm inspect supported flags. https://helm.sh/docs/helm/helm_inspect/      | `env`          | No       |
+| `HELM_DEPENDENCY_UPDATE_FLAGS` | Combination of helm dependency update supported flags. https://helm.sh/docs/helm/dependency_update/ | `env`          | No       |
+| `HELM_PACKAGE_FLAGS`           | Combination of helm package supported flags. https://helm.sh/docs/helm/helm_package/      | `env`          | No       |
+| `HELM_PUSH_FLAGS`              | Combination of helm push supported flags. https://helm.sh/docs/helm/helm_push/          | `env`          | No       |
 
 ## Action versions
 
