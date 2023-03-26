@@ -32,8 +32,9 @@ if [ "$FORCE" == "1" ] || [ "$FORCE" == "True" ] || [ "$FORCE" == "TRUE" ]; then
   REPO_ADD_FLAGS="${REPO_ADD_FLAGS} --force-update "
 fi
 
+PROTOCOL=""
 if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] || [ "$OCI_ENABLED_REGISTRY" == "TRUE" ]; then
-  REPO_ADD_FLAGS="${REPO_ADD_FLAGS} --enable-oci "
+  PROTOCOL="oci://"
 fi
 
 #it's better to always login before because some charts might depend on others same museum
@@ -66,4 +67,4 @@ if [ ! -f $FILE_PATH ]; then
   exit 1
 fi
 
-helm push ${FILE_PATH} ${CHARTMUSEUM_URL}
+helm push ${FILE_PATH} ${PROTOCOL}${CHARTMUSEUM_URL}
