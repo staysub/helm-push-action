@@ -1,4 +1,4 @@
-name: 'Helm Push Action'
+name: 'Helm Package and Push Action'
 description: 'Package multiple helm charts and push them to any registry supported by helm'
 author: 'allan-ayamah'
 branding:
