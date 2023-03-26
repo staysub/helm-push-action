@@ -39,6 +39,6 @@ jobs:
         env:
           SOURCE_DIR: '.github/'
           CHART_DIR: 'chart'
-          REGISTRY_URL: 'http://chartmuseum:8080'
+          REGISTRY_URL: 'http://localhost:8080'
           REGISTRY_USER: 'admin'
           REGISTRY_PASSWORD: 'test'
