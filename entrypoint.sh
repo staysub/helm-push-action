@@ -28,14 +28,16 @@ if [ -z "$SOURCE_DIR" ]; then
 fi
 
 REPO_ADD_FLAGS=""
-if [ "$FORCE" == "1" ] || [ "$FORCE" == "True" ] || [ "$FORCE" == "TRUE" ]; then
-  REPO_ADD_FLAGS="${REPO_ADD_FLAGS} --force-update "
-fi
+#if [ "$FORCE" == "1" ] || [ "$FORCE" == "True" ] || [ "$FORCE" == "TRUE" ]; then
+#  REPO_ADD_FLAGS="${REPO_ADD_FLAGS} --force-update "
+#fi
 
 PROTOCOL=""
 if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] || [ "$OCI_ENABLED_REGISTRY" == "TRUE" ]; then
   PROTOCOL="oci://"
 fi
+
+COMPLETE_REGISTRY_URL="${PROTOCOL}${CHARTMUSEUM_URL}"
 
 #it's better to always login before because some charts might depend on others same museum
 # and the need to be downloaded during packaging
@@ -49,7 +51,7 @@ if [[ ! $CHARTMUSEUM_REPO_NAME ]]; then
   CHARTMUSEUM_REPO_NAME="SOME_CHARTMUSEUM_REPO_NAME"
 fi
 
-helm repo add ${CHARTMUSEUM_REPO_NAME} ${CHARTMUSEUM_URL} ${REPO_ADD_FLAGS}
+helm repo add ${CHARTMUSEUM_REPO_NAME} ${COMPLETE_REGISTRY_URL} ${REPO_ADD_FLAGS}
 
 helm inspect chart .
 
@@ -67,4 +69,4 @@ if [ ! -f $FILE_PATH ]; then
   exit 1
 fi
 
-helm push ${FILE_PATH} ${PROTOCOL}${CHARTMUSEUM_URL}
+helm push ${FILE_PATH} ${COMPLETE_REGISTRY_URL}
