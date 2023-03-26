@@ -1,12 +1,12 @@
 name: 'Helm Push Action'
-description: 'Package helm chart and push it to Chartmuseum'
-author: 'Goodsmileduck'
+description: 'Package helm chart and push it any registry supported by helm'
+author: 'staysub'
 branding:
   color: 'blue'
   icon: 'upload-cloud'
-inputs: 
-  ChartmuseumUrl:
-    description: 'Url to your Chartmuseum'
+inputs:
+  RegistryUrl:
+    description: 'Url to your registry'
     default: ''
 runs:
   using: 'docker'

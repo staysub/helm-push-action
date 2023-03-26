@@ -12,7 +12,7 @@ jobs:
       chartmuseum:
         image: chartmuseum/chartmuseum:v0.12.0
         ports:
-        - 8080:8080
+          - 8080:8080
         env:
           DEBUG: 1
           STORAGE: local
@@ -20,23 +20,23 @@ jobs:
           BASIC_AUTH_USER: admin
           BASIC_AUTH_PASS: test
         volumes:
-        - /tmp:/charts
+          - /tmp:/charts
 
     steps:
-    - uses: 'actions/checkout@v2'
+      - uses: 'actions/checkout@v2'
 
-    - name: 'Build docker image'
-      run: 'docker build -t helm .'
+      - name: 'Build docker image'
+        run: 'docker build -t helm .'
 
-    - name: 'Test helm v2 version'
-      run: 'docker run --rm -i --entrypoint=helm helm version -c'
+      - name: 'Test helm v2 version'
+        run: 'docker run --rm -i --entrypoint=helm helm version -c'
 
-    - name: 'Test helm v2 push'
-      uses: ./
-      env:
-        SOURCE_DIR: '.github/'
-        CHART_FOLDER: 'chart'
-        FORCE: 'True'
-        CHARTMUSEUM_URL: 'http://chartmuseum:8080'
-        CHARTMUSEUM_USER: 'admin'
-        CHARTMUSEUM_PASSWORD: 'test'
+      - name: 'Test helm v2 push'
+        uses: ./
+        env:
+          SOURCE_DIR: '.github/'
+          CHART_DIR: 'chart'
+          FORCE: 'True'
+          REGISTRY_URL: 'http://chartmuseum:8080'
+          REGISTRY_USER: 'admin'
+          REGISTRY_PASSWORD: 'test'
