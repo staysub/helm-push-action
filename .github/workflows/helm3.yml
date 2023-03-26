@@ -32,13 +32,16 @@ jobs:
         run: 'docker build -t helm .'
 
       - name: 'Test helm v3 version'
-        run: 'docker run --rm -i --entrypoint= curl -s http://chartmuseum:8080 '
+        run: 'docker run --rm -i --entrypoint=helm helm version -c'
+
+      - name: 'Test container access to ChartMuseum'
+        run: 'docker run --rm some-other-container curl -s http://chartmuseum:8080'
 
       - name: 'Test helm v3 push'
         uses: ./
         env:
           SOURCE_DIR: '.github/'
           CHART_DIR: 'chart'
-          REGISTRY_URL: 'http://localhost:8080'
+          REGISTRY_URL: 'http://chartmuseum:8080'
           REGISTRY_USER: 'admin'
           REGISTRY_PASSWORD: 'test'
