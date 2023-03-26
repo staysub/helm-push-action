@@ -3,6 +3,10 @@
 set -e
 set -x
 
+
+
+curl -s http://chartmuseum:8080
+
 if [ -z "$CHART_DIR" ]; then
   echo "CHART_DIR is not set. Quitting."
   exit 1

@@ -34,9 +34,6 @@ jobs:
       - name: 'Test helm v3 version'
         run: 'docker run --rm -i --entrypoint=helm helm version -c'
 
-      - name: 'Test container access to ChartMuseum'
-        run: 'docker run --rm some-other-container curl -s http://chartmuseum:8080'
-
       - name: 'Test helm v3 push'
         uses: ./
         env:
