@@ -27,32 +27,25 @@ if [ -z "$SOURCE_DIR" ]; then
   SOURCE_DIR="."
 fi
 
-if [ -z "$FORCE" ]; then
-  FORCE=""
-elif [ "$FORCE" == "1" ] || [ "$FORCE" == "True" ] || [ "$FORCE" == "TRUE" ]; then
-  FORCE="-f"
+REPO_ADD_FLAGS=""
+if [ "$FORCE" == "1" ] || [ "$FORCE" == "True" ] || [ "$FORCE" == "TRUE" ]; then
+  REPO_ADD_FLAGS="${REPO_ADD_FLAGS} --force-update "
 fi
 
+if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] || [ "$OCI_ENABLED_REGISTRY" == "TRUE" ]; then
+  REPO_ADD_FLAGS="${REPO_ADD_FLAGS} --enable-oci "
+fi
 
+#it's better to always login before because some charts might depend on others same museum
+# and the need to be downloaded during packaging
+echo ${CHARTMUSEUM_PASSWORD} | helm registry login -u ${CHARTMUSEUM_USER} --password-stdin ${CHARTMUSEUM_URL}
 
 cd ${SOURCE_DIR}/${CHART_FOLDER}
 
 helm version -c
 
-#it's better to always login before because some charts might depend on others same museum
-# and the need to be downloaded during packaging
-
-echo ${CHARTMUSEUM_PASSWORD} | helm registry login -u ${CHARTMUSEUM_USER} --password-stdin ${CHARTMUSEUM_URL}
-
-PROTOCOL=""
-if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] || [ "$OCI_ENABLED_REGISTRY" == "TRUE" ]; then
-  PROTOCOL="oci://"
-fi
-
-CHARTMUSEUM_COMPLETE_URL="${PROTOCOL}${CHARTMUSEUM_URL}"
-
 if [[ $CHARTMUSEUM_REPO_NAME ]]; then
-  helm repo add ${CHARTMUSEUM_REPO_NAME} ${CHARTMUSEUM_COMPLETE_URL}
+  helm repo add ${CHARTMUSEUM_REPO_NAME} ${CHARTMUSEUM_URL} REPO_ADD_FLAGS
 fi
 
 helm inspect chart .
@@ -71,4 +64,4 @@ if [ ! -f $FILE_PATH ]; then
   exit 1
 fi
 
-helm push ${FILE_PATH} ${CHARTMUSEUM_COMPLETE_URL}
+helm push ${FILE_PATH} ${CHARTMUSEUM_URL}
