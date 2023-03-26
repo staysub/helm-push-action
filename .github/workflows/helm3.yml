@@ -43,3 +43,4 @@ jobs:
           REGISTRY_URL: 'http://chartmuseum:8080'
           REGISTRY_USER: 'admin'
           REGISTRY_PASSWORD: 'test'
+          HELM_PUSH_FLAGS: " --insecure-skip-tls-verify"
