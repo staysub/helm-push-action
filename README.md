@@ -64,10 +64,10 @@ otherwise, they'll be public to anyone browsing your repository.
 | `REGISTRY_USER`                | Username for registry                                                                                                                                           | `secret`       | No       |
 | `REGISTRY_PASSWORD`            | Password for registry                                                                                                                                           | `secret`       | No       |
 | `OCI_ENABLED_REGISTRY`         | Set to `True` if your registry is OCI based like (GCP artifact registry). Defaults is `False` if not provided.                                                  | `env`          | No       |
-| `HELM_INSPECT_FLAGS`           | Combination of helm inspect supported flags. [here]                                                            (https://helm.sh/docs/helm/helm_inspect/)        | `env`          | No       |
-| `HELM_DEPENDENCY_UPDATE_FLAGS` | Combination of helm dependency update supported flags. [here]                                                    (https://helm.sh/docs/helm/dependency_update/) | `env`          | No       |
-| `HELM_PACKAGE_FLAGS`           | Combination of helm package supported flags. [here]                                                             (https://helm.sh/docs/helm/helm_package/)       | `env`          | No       |
-| `HELM_PUSH_FLAGS`              | Combination of helm push supported flags. [here]                                                                (https://helm.sh/docs/helm/helm_push/)          | `env`          | No       |
+| `HELM_INSPECT_FLAGS`           | Combination of helm inspect supported flags. [here](https://helm.sh/docs/helm/helm_inspect/)        | `env`          | No       |
+| `HELM_DEPENDENCY_UPDATE_FLAGS` | Combination of helm dependency update supported flags. [here](https://helm.sh/docs/helm/dependency_update/) | `env`          | No       |
+| `HELM_PACKAGE_FLAGS`           | Combination of helm package supported flags. [here](https://helm.sh/docs/helm/helm_package/)       | `env`          | No       |
+| `HELM_PUSH_FLAGS`              | Combination of helm push supported flags. [here](https://helm.sh/docs/helm/helm_push/)          | `env`          | No       |
 
 ## Action versions
 
