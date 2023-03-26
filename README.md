@@ -1,6 +1,7 @@
 # Helm push action
 
 This action package helm chart and publish it to your chart registry (OCI registry included)
+Add helm supported FLAGS to every (almost) process
 
 ## Usage
 
