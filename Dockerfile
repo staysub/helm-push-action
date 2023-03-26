@@ -6,6 +6,7 @@ LABEL maintainer="Allan Ayamah <allan.ayamah@gmail.com>" \
   org.label-schema.schema-version="1.0"
 
 ENV HELM_VERSION v3.11.2
+ENV HELM_PLUGIN_PUSH_VERSION v0.10.3
 
 ENV XDG_CONFIG_DIR=/opt
 ENV XDG_DATA_HOME=/opt
@@ -18,6 +19,8 @@ RUN set -ex \
     && rm -rf linux-amd64 
 
 RUN apk add --virtual .helm-build-deps git make \
+    && helm plugin install https://github.com/chartmuseum/helm-push.git --version ${HELM_PLUGIN_PUSH_VERSION} \
+    && rm -rf /opt/helm/plugins/https-github.com-chartmuseum-helm-push.git \
     && apk del --purge .helm-build-deps
 
 COPY entrypoint.sh /entrypoint.sh
