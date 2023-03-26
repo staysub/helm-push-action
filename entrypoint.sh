@@ -45,10 +45,10 @@ if [[ $REGISTRY_USER ]]; then
 fi
 
 SOURCE_DIR=""
-
+cd .
 #Package all charts
 TMP_DIR_PREFIX="/tmp/charts/"
-while IFS= read -r I_CHART_DIR_PATH_LIST; do
+echo "$CHART_DIR_PATH_LIST" | while IFS= read -r I_CHART_DIR_PATH; do
   I_CHART_DIR_PATH="${SOURCE_DIR}/${I_CHART_DIR}"
 
   helm inspect chart ${I_CHART_DIR_PATH} ${HELM_INSPECT_FLAGS}
@@ -57,8 +57,8 @@ while IFS= read -r I_CHART_DIR_PATH_LIST; do
   TMP_PACKAGE_DIR="${TMP_DIR_PREFIX}/${I_CHART_DIR}"
   mkdir -p ${TMP_PACKAGE_DIR}
 
-  helm package . -d ${TMP_PACKAGE_DIR} ${HELM_PACKAGE_FLAGS}
-done <<<"$CHART_DIR_PATH_LIST"
+  helm package ${I_CHART_DIR_PATH} -d ${TMP_PACKAGE_DIR} ${HELM_PACKAGE_FLAGS}
+done
 
 COMPLETE_REGISTRY_URL="${PROTOCOL}${REGISTRY_URL}"
 
@@ -68,7 +68,7 @@ if [[ $COMPLETE_REGISTRY_URL == http:* ]]; then
   HELM_SUPPORTS_PROTOCOL=0
 fi
 #push all generated charts
-while IFS= read -r I_CHART_DIR_PATH_LIST; do
+echo "$CHART_DIR_PATH_LIST" | while IFS= read -r I_CHART_DIR_PATH; do
   I_CHART_DIR_PATH="${SOURCE_DIR}/${I_CHART_DIR}"
   TMP_PACKAGE_DIR="${TMP_DIR_PREFIX}/${I_CHART_DIR}"
 
@@ -79,5 +79,4 @@ while IFS= read -r I_CHART_DIR_PATH_LIST; do
       helm cm-push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS}
     fi
   done
-done <<<"$CHART_DIR_PATH_LIST"
-echo "done"
+done
