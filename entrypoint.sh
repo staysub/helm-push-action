@@ -35,8 +35,7 @@ if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] |
   CAN_REPO_ADD=0
 fi
 
-#it's better to always login before because some charts might depend on others same museum
-# and the need to be downloaded during packaging
+
 echo ${REGISTRY_PASSWORD} | helm registry login -u ${REGISTRY_USER} --password-stdin ${REGISTRY_URL}
 
 cd ${SOURCE_DIR}/${CHART_DIR}
