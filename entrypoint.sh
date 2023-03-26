@@ -79,7 +79,11 @@ for I_CHART_DIR in "${CHART_DIR_PATH_LIST_ARRAY[@]}"; do
     if [[ "${OCI_ENABLED_REGISTRY}" == "True" ]]; then
       helm push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS}
     else
-      helm cm-push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS}
+      if ! [ -z "$REGISTRY_USER" ]; then
+        helm cm-push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD}  ${HELM_PUSH_FLAGS}
+      else
+        helm cm-push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS}
+      fi
     fi
   done
 done
