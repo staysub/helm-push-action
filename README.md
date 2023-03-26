@@ -1,7 +1,10 @@
 # Helm push action
 
 This action packages helm chart and publish it to your chart registry (OCI registry included)
-Add helm supported FLAGS to every process
+
+1. OCI registry : Confirmed
+2. Chartmusem : Confirmed
+3. Should work for pretty much any other registry (if it does not, please open an issue)
 
 ## Usage
 
@@ -23,8 +26,8 @@ jobs:
         env:
           CHART_DIR_PATH_LIST: 'ecs-exporter'
           REGISTRY_URL: 'https://registry.url'
-          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
-          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }} #NOT required if you helm repo does not need authorization
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }} #NOT required if you helm repo does not need authorization
 ```
 
 ```yaml
@@ -38,12 +41,12 @@ jobs:
       - uses: actions/checkout@master
       - uses: staysub/helm-push-action@master
         env:
-          CHART_DIR_PATH_LIST: 'parent-dir/sub-dir-with-chart\nfirst-level-dir-with-chart'
+          CHART_DIR_PATH_LIST: 'parent-dir/sub-dir-with-chart:first-level-dir-with-chart:.dot-dir/my-chart-dir'
           REGISTRY_URL: 'europe-west1-docker.pkg.dev/my-project-id/my-image-registry/' #DO NOT add the oci protocol "oci://"
           REGISTRY_REPO_NAME: 'my-oci-helm-repo'
           OCI_ENABLED_REGISTRY: 'True'  #required for all OCI registries
-          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
-          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}  #NOT required if you helm repo does not need authorization
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }} #NOT required if you helm repo does not need authorization
 ```
 
 ### Configuration
@@ -56,8 +59,8 @@ otherwise, they'll be public to anyone browsing your repository.
 | Key                            | Value                                                                                                                                                           | Suggested Type | Required |
 |--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------|
 | `CHART_DIR_PATH_LIST`          | One or many directory paths where Chart.yaml can be found. Paths are seperated by the character `:`                                                             | `env`          | **Yes**  |
-| `REGISTRY_URL`                 | Registry url                                                                                                                                                    | `env`          | **Yes**  |
-| `REGISTRY_REPO_NAME`                | Repo name. if emtpy a generic string witll be used                                                                                                              | `env`          | No       |
+| `REGISTRY_URL`                 | Comlete registry url. Avoid adding `oci://` protocol/prefix                                                                                                     | `env`          | **Yes**  |
+| `REGISTRY_REPO_NAME`           | Repo name. if emtpy a generic string witll be used                                                                                                              | `env`          | No       |
 | `REGISTRY_USER`                | Username for registry                                                                                                                                           | `secret`       | No       |
 | `REGISTRY_PASSWORD`            | Password for registry                                                                                                                                           | `secret`       | No       |
 | `OCI_ENABLED_REGISTRY`         | Set to `True` if your registry is OCI based like (GCP artifcat registry). Defaults is `False` if not provided.                                                  | `env`          | No       |
