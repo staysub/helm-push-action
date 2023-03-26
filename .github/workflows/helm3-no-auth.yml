@@ -35,5 +35,5 @@ jobs:
       - name: 'Test helm v3 push'
         uses: ./
         env:
-          CHART_DIR_PATH_LIST: './.github/chart'
+          CHART_DIR_PATH_LIST: '.github/chart'
           REGISTRY_URL: 'http://chartmuseum:8080'

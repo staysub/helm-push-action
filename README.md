@@ -55,7 +55,7 @@ otherwise, they'll be public to anyone browsing your repository.
 
 | Key                            | Value                                                                                                                                                           | Suggested Type | Required |
 |--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------|
-| `CHART_DIR_PATH_LIST`          | One or many directory paths where Chart.yaml can be found. Paths are seperated with \n (next line)                                                              | `env`          | **Yes**  |
+| `CHART_DIR_PATH_LIST`          | One or many directory paths where Chart.yaml can be found. Paths are seperated by the character `:`                                                             | `env`          | **Yes**  |
 | `REGISTRY_URL`                 | Registry url                                                                                                                                                    | `env`          | **Yes**  |
 | `REGISTRY_REPO_NAME`                | Repo name. if emtpy a generic string witll be used                                                                                                              | `env`          | No       |
 | `REGISTRY_USER`                | Username for registry                                                                                                                                           | `secret`       | No       |

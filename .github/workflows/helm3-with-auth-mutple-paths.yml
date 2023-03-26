@@ -37,7 +37,7 @@ jobs:
       - name: 'Test helm v3 push multiple'
         uses: ./
         env:
-          CHART_DIR_PATH_LIST: './.github/chart\n./.github/deep/chart2'
+          CHART_DIR_PATH_LIST: '.github/chart:.github/deep/chart2'
           REGISTRY_URL: 'http://chartmuseum:8080'
           REGISTRY_USER: 'admin'
           REGISTRY_PASSWORD: 'test'
