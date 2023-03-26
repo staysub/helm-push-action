@@ -27,11 +27,6 @@ if [ -z "$SOURCE_DIR" ]; then
   SOURCE_DIR="."
 fi
 
-REPO_ADD_FLAGS=""
-#if [ "$FORCE" == "1" ] || [ "$FORCE" == "True" ] || [ "$FORCE" == "TRUE" ]; then
-#  REPO_ADD_FLAGS="${REPO_ADD_FLAGS} --force-update "
-#fi
-
 PROTOCOL=""
 if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] || [ "$OCI_ENABLED_REGISTRY" == "TRUE" ]; then
   PROTOCOL="oci://"
@@ -47,17 +42,17 @@ cd ${SOURCE_DIR}/${CHART_FOLDER}
 
 helm version -c
 
-if [[ ! $REGISTRY_REPO_NAME ]]; then
-  REGISTRY_REPO_NAME="SOME_REGISTRY_NAME"
+if [[ ! $REGISTRY_NAME ]]; then
+  REGISTRY_NAME="SOME_REGISTRY_NAME"
 fi
 
-helm repo add ${REGISTRY_REPO_NAME} ${COMPLETE_REGISTRY_URL} ${REPO_ADD_FLAGS}
+helm repo add ${REGISTRY_NAME} ${COMPLETE_REGISTRY_URL} ${HELM_REPO_ADD_FLAGS}
 
-helm inspect chart .
+helm inspect chart . ${HELM_INSPECT_FLAGS}
 
-helm dependency update .
+helm dependency update . ${HELM_DEPENDENCY_UPDATE_FLAGS}
 
-helm package .
+helm package . ${HELM_PACKAGE_FLAGS}
 
 #gets file path from successfully output message from helm package command
 #this is hack but it seem the REGISTRY plugin "cm-push" is not compatible with the latest version of helm
@@ -69,4 +64,4 @@ if [ ! -f $FILE_PATH ]; then
   exit 1
 fi
 
-helm push ${FILE_PATH} ${COMPLETE_REGISTRY_URL}
+helm push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS}
