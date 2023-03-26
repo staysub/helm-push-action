@@ -28,10 +28,11 @@ if [ -z "$SOURCE_DIR" ]; then
 fi
 
 PROTOCOL=""
-PROTOCOL_FOR_REPO_ADD=""
+CAN_REPO_ADD=1
 if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] || [ "$OCI_ENABLED_REGISTRY" == "TRUE" ]; then
   PROTOCOL="oci://"
-  PROTOCOL_FOR_REPO_ADD="https://"
+  #helm dont support add for oci registries
+  CAN_REPO_ADD=0
 fi
 
 #it's better to always login before because some charts might depend on others same museum
@@ -42,11 +43,10 @@ cd ${SOURCE_DIR}/${CHART_DIR}
 
 helm version -c
 
-if [[ ! $REGISTRY_NAME ]]; then
-  REGISTRY_NAME="SOME_REGISTRY_NAME"
+if [[ $CAN_REPO_ADD == 1 && $REGISTRY_NAME ]]; then
+  echo ${REGISTRY_PASSWORD} | helm repo add ${REGISTRY_NAME} ${REGISTRY_URL} --username ${REGISTRY_USER} --password-stdin ${HELM_REPO_ADD_FLAGS}
 fi
 
-helm repo add ${REGISTRY_NAME} "${PROTOCOL_FOR_REPO_ADD}${REGISTRY_URL}" ${HELM_REPO_ADD_FLAGS}
 
 helm inspect chart . ${HELM_INSPECT_FLAGS}
 
