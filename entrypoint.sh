@@ -36,9 +36,7 @@ if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] |
 fi
 
 
-#echo "$REGISTRY_PASSWORD" | helm registry login --username ${REGISTRY_USER} --password-stdin ${REGISTRY_URL}
-
-helm registry login ${REGISTRY_URL} --username ${REGISTRY_USER} --password ${REGISTRY_PASSWORD}
+echo ${REGISTRY_PASSWORD} | helm registry login --username ${REGISTRY_USER} --password-stdin ${REGISTRY_URL}
 
 cd ${SOURCE_DIR}/${CHART_DIR}
 
