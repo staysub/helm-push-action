@@ -8,18 +8,18 @@ if [ -z "$CHART_FOLDER" ]; then
   exit 1
 fi
 
-if [ -z "$CHARTMUSEUM_URL" ]; then
-  echo "CHARTMUSEUM_URL is not set. Quitting."
+if [ -z "$REGISTRY_URL" ]; then
+  echo "REGISTRY_URL is not set. Quitting."
   exit 1
 fi
 
-if [ -z "$CHARTMUSEUM_USER" ]; then
-  echo "CHARTMUSEUM_USER is not set. Quitting."
+if [ -z "$REGISTRY_USER" ]; then
+  echo "REGISTRY_USER is not set. Quitting."
   exit 1
 fi
 
-if [ -z "$CHARTMUSEUM_PASSWORD" ]; then
-  echo "CHARTMUSEUM_PASSWORD is not set. Quitting."
+if [ -z "$REGISTRY_PASSWORD" ]; then
+  echo "REGISTRY_PASSWORD is not set. Quitting."
   exit 1
 fi
 
@@ -37,21 +37,21 @@ if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] |
   PROTOCOL="oci://"
 fi
 
-COMPLETE_REGISTRY_URL="${PROTOCOL}${CHARTMUSEUM_URL}"
+COMPLETE_REGISTRY_URL="${PROTOCOL}${REGISTRY_URL}"
 
 #it's better to always login before because some charts might depend on others same museum
 # and the need to be downloaded during packaging
-echo ${CHARTMUSEUM_PASSWORD} | helm registry login -u ${CHARTMUSEUM_USER} --password-stdin ${CHARTMUSEUM_URL}
+echo ${REGISTRY_PASSWORD} | helm registry login -u ${REGISTRY_USER} --password-stdin ${REGISTRY_URL}
 
 cd ${SOURCE_DIR}/${CHART_FOLDER}
 
 helm version -c
 
-if [[ ! $CHARTMUSEUM_REPO_NAME ]]; then
-  CHARTMUSEUM_REPO_NAME="SOME_CHARTMUSEUM_REPO_NAME"
+if [[ ! $REGISTRY_REPO_NAME ]]; then
+  REGISTRY_REPO_NAME="SOME_REGISTRY_NAME"
 fi
 
-helm repo add ${CHARTMUSEUM_REPO_NAME} ${COMPLETE_REGISTRY_URL} ${REPO_ADD_FLAGS}
+helm repo add ${REGISTRY_REPO_NAME} ${COMPLETE_REGISTRY_URL} ${REPO_ADD_FLAGS}
 
 helm inspect chart .
 
@@ -60,7 +60,7 @@ helm dependency update .
 helm package .
 
 #gets file path from successfully output message from helm package command
-#this is hack but it seem the chartmuseum plugin "cm-push" is not compatible with the latest version of helm
+#this is hack but it seem the REGISTRY plugin "cm-push" is not compatible with the latest version of helm
 HELM_MESSAGE_OUTPUT=$(!!)
 FILE_PATH="${HELM_MESSAGE_OUTPUT##*: }"
 
