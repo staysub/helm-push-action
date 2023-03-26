@@ -3,8 +3,8 @@
 set -e
 set -x
 
-if [ -z "$CHART_FOLDER" ]; then
-  echo "CHART_FOLDER is not set. Quitting."
+if [ -z "$CHART_DIR" ]; then
+  echo "CHART_DIR is not set. Quitting."
   exit 1
 fi
 
@@ -38,7 +38,7 @@ COMPLETE_REGISTRY_URL="${PROTOCOL}${REGISTRY_URL}"
 # and the need to be downloaded during packaging
 echo ${REGISTRY_PASSWORD} | helm registry login -u ${REGISTRY_USER} --password-stdin ${REGISTRY_URL}
 
-cd ${SOURCE_DIR}/${CHART_FOLDER}
+cd ${SOURCE_DIR}/${CHART_DIR}
 
 helm version -c
 
