@@ -28,11 +28,11 @@ if [ -z "$SOURCE_DIR" ]; then
 fi
 
 PROTOCOL=""
+PROTOCOL_FOR_REPO_ADD=""
 if [ "$OCI_ENABLED_REGISTRY" == "1" ] || [ "$OCI_ENABLED_REGISTRY" == "True" ] || [ "$OCI_ENABLED_REGISTRY" == "TRUE" ]; then
   PROTOCOL="oci://"
+  PROTOCOL_FOR_REPO_ADD="https://"
 fi
-
-COMPLETE_REGISTRY_URL="${PROTOCOL}${REGISTRY_URL}"
 
 #it's better to always login before because some charts might depend on others same museum
 # and the need to be downloaded during packaging
@@ -46,7 +46,7 @@ if [[ ! $REGISTRY_NAME ]]; then
   REGISTRY_NAME="SOME_REGISTRY_NAME"
 fi
 
-helm repo add ${REGISTRY_NAME} ${COMPLETE_REGISTRY_URL} ${HELM_REPO_ADD_FLAGS}
+helm repo add ${REGISTRY_NAME} "${PROTOCOL_FOR_REPO_ADD}${REGISTRY_URL}" ${HELM_REPO_ADD_FLAGS}
 
 helm inspect chart . ${HELM_INSPECT_FLAGS}
 
@@ -64,4 +64,5 @@ if [ ! -f $FILE_PATH ]; then
   exit 1
 fi
 
+COMPLETE_REGISTRY_URL="${PROTOCOL}${REGISTRY_URL}"
 helm push ${FILE_PATH} ${COMPLETE_REGISTRY_URL} ${HELM_PUSH_FLAGS}
