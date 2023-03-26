@@ -1,8 +1,8 @@
 # Helm push action
 
-This action packages one or more helm charts and publish them to your chart registry
+This action packages one or more helm charts and publish them to your registry
 1. OCI registries : ***Supported***
-2. Chartmusem : ***Supported***
+2. Chartmuseum : ***Supported***
 3. Should work for pretty much any other registry (if it doesn't, please open an issue)
 
 ## Usage
